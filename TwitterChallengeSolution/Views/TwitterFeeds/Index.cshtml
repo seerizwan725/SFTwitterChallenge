@@ -1,0 +1,74 @@
+﻿@model TwitterChallengeSolution.Models.TwitterFeedViewModel
+
+
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>SalesForce Latest Tweets</h2>
+<table class="table">
+    <tr>
+        <th>Search</th>
+    <tr>
+        <td>
+            @using (Html.BeginForm("SearchInFeeds", "TwitterFeeds"))
+            {
+                @Html.AntiForgeryToken()
+                <input type="text" name="searchstring">    
+                <input type="submit" id="btnSearch" value="Search" class="btn btn-success btn-sm" />
+           }  
+          
+        </td>
+    </tr>
+
+    @foreach (var item in Model.AllTweets) {
+        <tr>
+            <td>
+                @if (!string.IsNullOrEmpty(item.ProfileImageurl))
+                {
+                    <img src=@Url.Content(item.ProfileImageurl) alt="Sample Image" width="100px"/>
+                }
+                
+                @Html.LabelForModel(item.TweetDate)
+                @if (!string.IsNullOrEmpty(item.text))
+                {
+                    @Html.TextArea("Tweets Content", item.text, new { rows = "8", cols = "500" })
+                }
+                
+            </td>
+            <td>
+                @Html.Label("Retweets:")
+                @Html.Label("Retweets:", item.ReTweetsCount.ToString())
+            </td>
+            <td>
+                
+                @if (!string.IsNullOrEmpty(item.ScreenUserName))
+                {
+                    @Html.Label("screen_name: ")
+                    @Html.LabelForModel(item.ScreenUserName,new {style="color:blue"})
+                }
+            </td>
+            <td>
+                @if (!string.IsNullOrEmpty(item.ProfileBannerImageurl))
+                {
+                    <img src=@Url.Content(item.ProfileBannerImageurl) alt="NO IMAGE FOUND" width="300px" />
+                }
+                
+
+            </td>
+        </tr>
+    }
+
+</table>
+
+@*@section Scripts {
+    <script type="text/javascript">
+        $("#button").click(function () {
+            var txtVal = $("#txt").val();
+            alert(txtVal);
+            window.location = "@Url.Action("SearchInFeeds", "TwitterFeeds")" + 
+                "?searchstring=" + txtVal;
+        });
+    </script>
+}*@
